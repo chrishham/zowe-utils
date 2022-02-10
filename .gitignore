@@ -1,0 +1,14 @@
+node_modules
+package-lock.json
+yarn.lock
+*.tgz
+.nyc_output
+package-lock.json
+/test/output/
+/test/local.jcl
+*.env
+local*
+coverage
+TODO
+.vscode
+bigFile.txt
