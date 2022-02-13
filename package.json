@@ -1,15 +1,24 @@
 {
   "name": "zowe-utils",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "z/OS : JCL submission and common ftp operations, for NodeJS developers (ZOWE).",
+  "repository": "https://github.com/chrishham/zowe-utils.git",
+  "main": "lib/index.js",
   "scripts": {
     "start": "node lib/index.js",
     "test": "eslint . --fix && nyc --reporter=html --reporter=text mocha --timeout 100000 --slow 15000"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "z/os",
+    "jcl",
+    "mainframe",
+    "submit",
+    "JES",
+    "ftp",
+    "zowe"
+  ],
+  "author": "Christopher Chamaletsos",
+  "license": "MIT",
   "dependencies": {
     "compare-semver": "^1.1.0",
     "delay": "^5.0.0",
