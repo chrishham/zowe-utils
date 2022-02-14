@@ -57,7 +57,7 @@ describe('ZosFtp Test Suite', () => {
       return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.NOOP`, { sourceType: 'localFile' })
     })
 
-    it('should put big local file to z/OS dataset', async () => {
+    it.skip('should put big local file to z/OS dataset', async () => {
       return ZosFtp.put(path.resolve(__dirname, 'bigFile.txt'), `${config.user}.ZOWEUTIL.BIGFILE`, {
         sourceType: 'localFile',
         recfm: 'FB',
@@ -83,7 +83,7 @@ describe('ZosFtp Test Suite', () => {
     it('should get host file to local dataset', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`, path.resolve(__dirname, 'output', 'ZOWEUTIL.txt'))
     })
-    it('should get big host file to local dataset', async () => {
+    it.skip('should get big host file to local dataset', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.BIGFILE`, path.resolve(__dirname, 'output', 'BIG_ZOWEUTIL.txt'))
     })
     it('should get host file to javascript string', async () => {
