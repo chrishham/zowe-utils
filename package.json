@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "node lib/index.js",
-    "test": "eslint . --fix && nyc --reporter=html --reporter=text mocha --timeout 100000 --slow 15000"
+    "test": "eslint . --fix && nyc --reporter=html --reporter=text mocha --timeout 300000 --slow 15000"
   },
   "keywords": [
     "z/os",

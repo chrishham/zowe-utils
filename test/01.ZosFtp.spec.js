@@ -1,6 +1,6 @@
 const path = require('path')
 const zoweUtils = require('../lib/index.js')
-const { ZosFtp } = zoweUtils(config)
+const { ZosFtp } = zoweUtils(global.config)
 const fs = require('fs-extra')
 
 if (!fs.existsSync(path.join(__dirname, 'bigFile.txt'))) {
@@ -57,7 +57,7 @@ describe('ZosFtp Test Suite', () => {
       return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.NOOP`, { sourceType: 'localFile' })
     })
 
-    it.skip('should put big local file to z/OS dataset', async () => {
+    it('should put big local file to z/OS dataset', async () => {
       return ZosFtp.put(path.resolve(__dirname, 'bigFile.txt'), `${config.user}.ZOWEUTIL.BIGFILE`, {
         sourceType: 'localFile',
         recfm: 'FB',
@@ -74,6 +74,22 @@ describe('ZosFtp Test Suite', () => {
         lrecl: 50
       })
     })
+    it('should put string to to z/OS dataset with no new Lines', async () => {
+      const sampleText = 'I don\'t need to have at list 1 newline character'
+      return ZosFtp.put(sampleText, `${config.user}.ZOWEUTIL.STRING`, {
+        sourceType: 'string',
+        recfm: 'FB',
+        lrecl: 80
+      })
+    })
+    it('should put string to to z/OS pds library with no new Lines', async () => {
+      const sampleText = 'I don\'t need to have at list 1 newline character'
+      return ZosFtp.put(sampleText, `${config.user}.ZOWEUTIL.PDS(TESTSTR)`, {
+        sourceType: 'string',
+        recfm: 'FB',
+        lrecl: 100
+      })
+    })
   })
 
   describe('FTP: Get files from Host', () => {
@@ -83,7 +99,7 @@ describe('ZosFtp Test Suite', () => {
     it('should get host file to local dataset', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`, path.resolve(__dirname, 'output', 'ZOWEUTIL.txt'))
     })
-    it.skip('should get big host file to local dataset', async () => {
+    it('should get big host file to local dataset', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.BIGFILE`, path.resolve(__dirname, 'output', 'BIG_ZOWEUTIL.txt'))
     })
     it('should get host file to javascript string', async () => {
@@ -96,6 +112,25 @@ describe('ZosFtp Test Suite', () => {
     it('should list pds members', async () => {
       return ZosFtp.list(`${config.user}.ZOWEUTIL.PDS`)
         .then(result => result.should.be.a('array'))
+    })
+  })
+
+  describe('Check Erros returned', () => {
+    it('should fail when wrong credentials are given', async () => {
+      const wrongConfig = Object.assign({}, global.config)
+      wrongConfig.user = 'NONEXISTENTUSER'
+      const ZosFtpWrongCredentials = zoweUtils(wrongConfig).ZosFtp
+      return ZosFtpWrongCredentials.list(`${wrongConfig.user}.ZOWEUTIL.PDS`)
+        .then(() => { throw new Error('JCL passed instead of failing') },
+          (error) => { error.message.should.contain('Wrong/Expired Password or User is not in group IZUUSER') })
+    })
+    it('should fail when Zosmf is unreachable', async () => {
+      const wrongConfig = Object.assign({}, global.config)
+      wrongConfig.host = '99.99.99.99'
+      const ZosFtpWrongCredentials = zoweUtils(wrongConfig).ZosFtp
+      return ZosFtpWrongCredentials.list(`${wrongConfig.user}.ZOWEUTIL.PDS`)
+        .then(() => { throw new Error('JCL passed instead of failing') },
+          (error) => { error.message.should.contain('Zosmf is not reachable') })
     })
   })
 })
