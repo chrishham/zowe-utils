@@ -1,6 +1,7 @@
 node_modules
 package-lock.json
 yarn.lock
+yarn-error.log
 *.tgz
 .nyc_output
 package-lock.json
