@@ -20,7 +20,8 @@ describe('SubJob: Submitting Job from string.', () => {
   it('should end up with RC=0000', async () => {
     try {
       const job = new ZosJob(jcl)
-      await job.sub()
+      const outlist = await job.sub()
+      outlist.should.be.a('String')
       job.RC.should.be.equal('0000')
     } catch (error) {
       console.log(error)
