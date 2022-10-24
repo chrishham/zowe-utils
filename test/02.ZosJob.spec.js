@@ -99,7 +99,7 @@ describe('SubJob: Submitting Job from string.', () => {
     return job.sub()
   })
 
-  it.skip('should cancel job that is running', function (done) {
+  it('should cancel job that is running', function (done) {
     jcl.source = `${jobStatement} \n// EXEC PGM=IKJEFT1B\n` +
       '//SYSEXEC   DD  UNIT=SYSALLDA,SPACE=(80,(5,1)),\n' +
       '//          DSN=&SYSEXEC,\n' +
@@ -124,6 +124,8 @@ describe('SubJob: Submitting Job from string.', () => {
     const job = new ZosJob(jcl)
     job.sub().catch(() => { })
     job.on('status-change', status => {
+      console.log({ status })
+      if (status !== 'ACTIVE') return
       job.cancel()
         .then(() => done())
         .catch(error => done(error))
@@ -164,7 +166,7 @@ describe('SubJob: Submitting Job From hostFile', () => {
     job.RC.should.be.equal('0000')
   })
 
-  it.skip('should not cancel job that is not running', () => {
+  it('should not cancel job that is not running', () => {
     const job = new ZosJob(jcl)
     return job.cancel()
       .then(
@@ -193,7 +195,7 @@ describe('SubJob: Reject invalid JCL source', () => {
 })
 
 describe('SubJob: Delete mainframe outlist', () => {
-  it.skip('should delete mainframe outlist', () => {
+  it('should delete mainframe outlist', () => {
     const configModified = Object.assign({}, config)
     configModified.deleteMainframeOutlist = true
     delete configModified.encoding
@@ -206,7 +208,8 @@ describe('SubJob: Delete mainframe outlist', () => {
       description: 'Basic Jcl',
       source: basicJCL,
       RC: '0000',
-      outlistLocalPath
+      outlistLocalPath,
+      sourceType: 'string'
     }
     const job = new ZosJobModified(jcl)
     return job.sub()
