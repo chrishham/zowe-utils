@@ -149,7 +149,7 @@ let job = new ZosJob(jcl)
     }  
     ```
 * ```ZosJob``` Events
-  * **'status-change'**: Emitted whenever job's running status changes e.g. from ```INPUT``` to ```ACTIVE```. 
+  * **'status-change'**: Emitted whenever job's running status changes e.g. from ```INPUT``` to ```ACTIVE``` or to ```OUTPUT```. 
    ```js
      job.on('status-change', newStatus => console.log(newStatus)) // 'ACTIVE'
    ```

@@ -10,7 +10,7 @@ if (!fs.existsSync(path.join(__dirname, 'bigFile.txt'))) {
   }
   fs.writeFileSync(path.join(__dirname, 'bigFile.txt'), string)
 }
-describe('ZosFtp Test Suite', () => {
+describe.skip('ZosFtp Test Suite', () => {
   describe('FTP: Delete Host files', () => {
     it('should delete host file', async () => {
       try {
