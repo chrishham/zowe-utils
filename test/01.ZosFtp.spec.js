@@ -10,7 +10,7 @@ if (!fs.existsSync(path.join(__dirname, 'bigFile.txt'))) {
   }
   fs.writeFileSync(path.join(__dirname, 'bigFile.txt'), string)
 }
-describe.skip('ZosFtp Test Suite', () => {
+describe('ZosFtp Test Suite', () => {
   describe('FTP: Delete Host files', () => {
     it('should delete host file', async () => {
       try {
@@ -50,6 +50,14 @@ describe.skip('ZosFtp Test Suite', () => {
         sourceType: 'localFile',
         recfm: 'FB',
         lrecl: 300
+      })
+    })
+
+    it('should put local file to z/OS dataset', async () => {
+      return ZosFtp.put('C:\\Users\\e40274\\Desktop\\PENEV635.txt', `${config.user}.PENEV635.FILE`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 314
       })
     })
 
