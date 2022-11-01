@@ -4,13 +4,13 @@ const { ZosFtp } = zoweUtils(global.config)
 const fs = require('fs-extra')
 
 if (!fs.existsSync(path.join(__dirname, 'bigFile.txt'))) {
-  let string = 'This is a really big file!\r\n'
+  let string = 'This is a really big file !\r\n'
   for (let i = 0; i < 20; i++) {
     string += string
   }
   fs.writeFileSync(path.join(__dirname, 'bigFile.txt'), string)
 }
-describe('ZosFtp Test Suite', () => {
+describe.only('ZosFtp Test Suite', () => {
   describe('FTP: Delete Host files', () => {
     it('should delete host file', async () => {
       try {
