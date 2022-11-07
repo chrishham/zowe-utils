@@ -1,6 +1,6 @@
 {
   "name": "zowe-utils",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "z/OS : JCL submission and common ftp operations, for NodeJS developers (ZOWE).",
   "repository": "https://github.com/chrishham/zowe-utils.git",
   "main": "lib/index.js",
@@ -25,6 +25,7 @@
     "fs-extra": "^10.0.0",
     "glob": "^7.2.0",
     "glob-promise": "^4.2.2",
+    "iconv-lite": "^0.6.3",
     "uuid-random": "^1.3.2"
   },
   "devDependencies": {

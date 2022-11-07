@@ -10,7 +10,7 @@ if (!fs.existsSync(path.join(__dirname, 'bigFile.txt'))) {
   }
   fs.writeFileSync(path.join(__dirname, 'bigFile.txt'), string)
 }
-describe.only('ZosFtp Test Suite', () => {
+describe('ZosFtp Test Suite', () => {
   describe('FTP: Delete Host files', () => {
     it('should delete host file', async () => {
       try {
@@ -53,14 +53,6 @@ describe.only('ZosFtp Test Suite', () => {
       })
     })
 
-    it('should put local file to z/OS dataset', async () => {
-      return ZosFtp.put('C:\\Users\\e40274\\Desktop\\PENEV635.txt', `${config.user}.PENEV635.FILE`, {
-        sourceType: 'localFile',
-        recfm: 'FB',
-        lrecl: 314
-      })
-    })
-
     it('should put local file to z/OS dataset - no options', async () => {
       return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.NOOP`, { sourceType: 'localFile' })
     })
@@ -74,7 +66,7 @@ describe.only('ZosFtp Test Suite', () => {
     })
 
     it('should put string to to z/OS dataset', async () => {
-      let sampleText = 'I need to have at list 1 newline character \r\n'
+      let sampleText = 'I need to have at least 1 newline character \r\n'
       for (let i = 0; i < 5; i++) { sampleText += sampleText }
       return ZosFtp.put(sampleText, `${config.user}.ZOWEUTIL.STRING`, {
         sourceType: 'string',
@@ -83,7 +75,7 @@ describe.only('ZosFtp Test Suite', () => {
       })
     })
     it('should put string to to z/OS dataset with no new Lines', async () => {
-      const sampleText = 'I don\'t need to have at list 1 newline character'
+      const sampleText = 'I don\'t need to have at least 1 newline character'
       return ZosFtp.put(sampleText, `${config.user}.ZOWEUTIL.STRING`, {
         sourceType: 'string',
         recfm: 'FB',
@@ -91,7 +83,7 @@ describe.only('ZosFtp Test Suite', () => {
       })
     })
     it('should put string to to z/OS pds library with no new Lines', async () => {
-      const sampleText = 'I don\'t need to have at list 1 newline character'
+      const sampleText = 'I don\'t need to have at least 1 newline character'
       return ZosFtp.put(sampleText, `${config.user}.ZOWEUTIL.PDS(TESTSTR)`, {
         sourceType: 'string',
         recfm: 'FB',
@@ -102,7 +94,8 @@ describe.only('ZosFtp Test Suite', () => {
 
   describe('FTP: Get files from Host', () => {
     it('should get pds member to local dataset', async () => {
-      return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS(BASIC)`, path.resolve(__dirname, 'output', 'BASIC.txt'))
+      return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS(BASIC)`, path.resolve(__dirname, 'output', 'BASIC.txt'), 'single', true)
+        .then(console.log)
     })
     it('should get host file to local dataset', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`, path.resolve(__dirname, 'output', 'ZOWEUTIL.txt'))
@@ -114,12 +107,45 @@ describe.only('ZosFtp Test Suite', () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`)
         .then(result => result.should.be.a('string'))
     })
+    it('should download all members of a pds library', async () => {
+      return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
+      // await ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
+    })
+    // it.only('should upload a dir to a pds library', async () => {
+    //   await ZosFtp.uploadPdsLibrary(path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), `${config.user}.ZOWEUTI2.PDS`, 'all')
+    // })
   })
 
   describe('List Host Files', () => {
-    it('should list pds members', async () => {
+    it('should list sequential datasets', async () => {
+      return ZosFtp.list(`${config.user}.ZOWEUTIL.FILE`)
+        .then(result => {
+          // console.log(result)
+          result.should.be.a('array')
+        })
+    })
+    it('should list pds dataset', async () => {
       return ZosFtp.list(`${config.user}.ZOWEUTIL.PDS`)
-        .then(result => result.should.be.a('array'))
+        .then(result => {
+          // console.log(result)
+          result.should.be.a('array')
+        })
+    })
+
+    it('should list all pds members', async () => {
+      return ZosFtp.listPdsMembers(`${config.user}.ZOWEUTIL.PDS`)
+        .then(result => {
+          // console.log(result)
+          result.should.be.a('array')
+        })
+    })
+
+    it('should list all pds members that match a pattern', async () => {
+      return ZosFtp.listPdsMembers(`${config.user}.ZOWEUTIL.PDS`, 'BAS*')
+        .then(result => {
+          // console.log(result)
+          result.should.be.a('array')
+        })
     })
   })
 
