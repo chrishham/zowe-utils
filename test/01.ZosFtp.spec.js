@@ -35,6 +35,28 @@ describe('ZosFtp Test Suite', () => {
   })
 
   describe('FTP: Put files to Host', () => {
+    it('should fail when host dataset doesn\'t start with user id', async () => {
+      return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `PD.${config.user}.ZOWEUTIL.FILE`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 300
+      })
+        .then(() => { throw new Error('PUT passed instead of failing') },
+          (error) => { error.message.should.contain('Can upload to datasets/PDS starting with') })
+    })
+
+    it('should fail when host PDS doesn\'t start with user id', async () => {
+      return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `PD.${config.user}.ZOWEUTIL.PDS(BASIC)`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 80,
+        directory: 50,
+        size: '125CYL'
+      })
+        .then(() => { throw new Error('PUT passed instead of failing') },
+          (error) => { error.message.should.contain('Can upload to datasets/PDS starting with') })
+    })
+
     it('should put local file to PDS library', async () => {
       return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.PDS(BASIC)`, {
         sourceType: 'localFile',
@@ -111,9 +133,14 @@ describe('ZosFtp Test Suite', () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
       // await ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
     })
-    // it.only('should upload a dir to a pds library', async () => {
+    // it('should upload a dir to a pds library', async () => {
     //   await ZosFtp.uploadPdsLibrary(path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), `${config.user}.ZOWEUTI2.PDS`, 'all')
     // })
+    it('should fail when host PDS doesn\'t start with user id', async () => {
+      return ZosFtp.get(`PD.${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
+        .then(() => { throw new Error('GET passed instead of failing') },
+          (error) => { error.message.should.contain('Can download PDS libraries starting with') })
+    })
   })
 
   describe('List Host Files', () => {
