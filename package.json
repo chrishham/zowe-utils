@@ -1,6 +1,6 @@
 {
   "name": "zowe-utils",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "z/OS : JCL submission and common ftp operations, for NodeJS developers (ZOWE).",
   "repository": "https://github.com/chrishham/zowe-utils.git",
   "main": "lib/index.js",

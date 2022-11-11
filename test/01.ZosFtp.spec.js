@@ -42,7 +42,7 @@ describe('ZosFtp Test Suite', () => {
         lrecl: 300
       })
         .then(() => { throw new Error('PUT passed instead of failing') },
-          (error) => { error.message.should.contain('Can upload to datasets/PDS starting with') })
+          (error) => { error.message.should.contain('Can upload to dataset/PDS starting with') })
     })
 
     it('should fail when host PDS doesn\'t start with user id', async () => {
@@ -54,7 +54,7 @@ describe('ZosFtp Test Suite', () => {
         size: '125CYL'
       })
         .then(() => { throw new Error('PUT passed instead of failing') },
-          (error) => { error.message.should.contain('Can upload to datasets/PDS starting with') })
+          (error) => { error.message.should.contain('Can upload to dataset/PDS starting with') })
     })
 
     it('should put local file to PDS library', async () => {
@@ -81,6 +81,15 @@ describe('ZosFtp Test Suite', () => {
 
     it('should put big local file to z/OS dataset', async () => {
       return ZosFtp.put(path.resolve(__dirname, 'bigFile.txt'), `${config.user}.ZOWEUTIL.BIGFILE`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 300
+      })
+    })
+
+    it.skip('should put huge local file to z/OS dataset', async () => {
+      // 1.048.576 rows
+      return ZosFtp.put('C:\\Users\\e40274\\Desktop\\U764.FTOP.RISKREP3.ZILLA.txt', `${config.user}.ZOWEUTIL.XXSFILE`, {
         sourceType: 'localFile',
         recfm: 'FB',
         lrecl: 300
