@@ -87,14 +87,14 @@ describe('ZosFtp Test Suite', () => {
       })
     })
 
-    it.skip('should put huge local file to z/OS dataset', async () => {
-      // 1.048.576 rows
-      return ZosFtp.put('C:\\Users\\e40274\\Desktop\\U764.FTOP.RISKREP3.ZILLA.txt', `${config.user}.ZOWEUTIL.XXSFILE`, {
-        sourceType: 'localFile',
-        recfm: 'FB',
-        lrecl: 300
-      })
-    })
+    // it('should put huge local file to z/OS dataset', async () => {
+    //   // 1.048.576 rows
+    //   return ZosFtp.put('C:\\Users\\e40274\\Desktop\\U764.FTOP.RISKREP3.ZILLA.txt', `${config.user}.ZOWEUTIL.XXSFILE`, {
+    //     sourceType: 'localFile',
+    //     recfm: 'FB',
+    //     lrecl: 300
+    //   })
+    // })
 
     it('should put string to to z/OS dataset', async () => {
       let sampleText = 'I need to have at least 1 newline character \r\n'
@@ -120,6 +120,17 @@ describe('ZosFtp Test Suite', () => {
         recfm: 'FB',
         lrecl: 100
       })
+    })
+    it('should fail when trying to upload dataset to existing PDS', async () => {
+      return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.PDS`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 80,
+        directory: 50,
+        size: '125CYL'
+      })
+        .then(() => { throw new Error('PUT passed instead of failing') },
+          (error) => { error.message.should.contain('Cannot upload dataset to a PDS') })
     })
   })
 
