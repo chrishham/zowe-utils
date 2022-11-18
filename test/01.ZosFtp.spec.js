@@ -57,6 +57,30 @@ describe('ZosFtp Test Suite', () => {
           (error) => { error.message.should.contain('Can upload to dataset/PDS starting with') })
     })
 
+    it('should fail when pds name doesn\'t adhere to MVS naming conventions', async () => {
+      return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL98.PDS(BASIC)`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 80,
+        directory: 50,
+        size: '125CYL'
+      })
+        .then(() => { throw new Error('PUT passed instead of failing') },
+          (error) => { error.message.should.contain('Name doesn\'t adhere to MVS naming conventions') })
+    })
+
+    it('should fail when dataset name doesn\'t adhere to MVS naming conventions', async () => {
+      return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEU T.SEQ`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 80,
+        directory: 50,
+        size: '125CYL'
+      })
+        .then(() => { throw new Error('PUT passed instead of failing') },
+          (error) => { error.message.should.contain('Name doesn\'t adhere to MVS naming conventions') })
+    })
+
     it('should put local file to PDS library', async () => {
       return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.PDS(BASIC)`, {
         sourceType: 'localFile',
