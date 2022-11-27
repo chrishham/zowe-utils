@@ -15,6 +15,7 @@ describe('ZosFtp Test Suite', () => {
     it('should delete host file', async () => {
       try {
         await ZosFtp.del(`${config.user}.ZOWEUTIL.FILE`)
+        await ZosFtp.del(`${config.user}.ZOWEUTIL.BIN`)
         await ZosFtp.del(`${config.user}.ZOWEUTIL.BIGFILE`)
         await ZosFtp.del(`${config.user}.ZOWEUTIL.NOOP`)
         await ZosFtp.del(`${config.user}.ZOWEUTIL.STRING`)
@@ -95,7 +96,17 @@ describe('ZosFtp Test Suite', () => {
       return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.FILE`, {
         sourceType: 'localFile',
         recfm: 'FB',
-        lrecl: 300
+        lrecl: 300,
+        binary: false
+      })
+    })
+
+    it('should put local file to z/OS dataset using binary mode', async () => {
+      return ZosFtp.put(path.resolve(__dirname, 'local.jcl'), `${config.user}.ZOWEUTIL.BIN`, {
+        sourceType: 'localFile',
+        recfm: 'FB',
+        lrecl: 300,
+        binary: true
       })
     })
 
