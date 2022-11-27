@@ -160,11 +160,14 @@ describe('ZosFtp Test Suite', () => {
 
   describe('FTP: Get files from Host', () => {
     it('should get pds member to local dataset', async () => {
-      return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS(BASIC)`, path.resolve(__dirname, 'output', 'BASIC.txt'), 'single', true)
+      return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS(BASIC)`, path.resolve(__dirname, 'output', 'BASIC.txt'), { mode: 'single', returnString: true })
         .then(console.log)
     })
     it('should get host file to local dataset', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`, path.resolve(__dirname, 'output', 'ZOWEUTIL.txt'))
+    })
+    it('should get host file to local dataset using binary mode', async () => {
+      return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`, path.resolve(__dirname, 'output', 'ZOWEUTIL_Binary.txt'), { binary: true })
     })
     it('should get big host file to local dataset', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.BIGFILE`, path.resolve(__dirname, 'output', 'BIG_ZOWEUTIL.txt'))
@@ -174,14 +177,13 @@ describe('ZosFtp Test Suite', () => {
         .then(result => result.should.be.a('string'))
     })
     it('should download all members of a pds library', async () => {
-      return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
-      // await ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
+      return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), { mode: 'all' })
     })
     // it('should upload a dir to a pds library', async () => {
     //   await ZosFtp.uploadPdsLibrary(path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), `${config.user}.ZOWEUTI2.PDS`, 'all')
     // })
     it('should fail when host PDS doesn\'t start with user id', async () => {
-      return ZosFtp.get(`PD.${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), 'all')
+      return ZosFtp.get(`PD.${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), { mode: 'all' })
         .then(() => { throw new Error('GET passed instead of failing') },
           (error) => { error.message.should.contain('Can download PDS libraries starting with') })
     })

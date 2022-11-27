@@ -123,9 +123,9 @@ describe('SubJob: Submitting Job from string.', () => {
     jcl.name = 'LOAUNL'
     const job = new ZosJob(jcl)
     job.sub().catch(() => { })
-    job.cancel()
+    job.on('status-change', () => job.cancel()
       .then(() => done())
-      .catch(error => done(error))
+      .catch(error => done(error)))
   })
 })
 
