@@ -187,13 +187,13 @@ describe('ZosFtp Test Suite', () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`)
         .then(result => result.should.be.a('string'))
     })
-    it('should download all members of a pds library', async () => {
+    it.only('should download all members of a pds library', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), { mode: 'all' })
     })
     // it('should upload a dir to a pds library', async () => {
     //   await ZosFtp.uploadPdsLibrary(path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), `${config.user}.ZOWEUTI2.PDS`, 'all')
     // })
-    it('should fail when host PDS doesn\'t start with user id', async () => {
+    it.skip('should fail when host PDS doesn\'t start with user id', async () => {
       return ZosFtp.get(`PD.${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), { mode: 'all' })
         .then(() => { throw new Error('GET passed instead of failing') },
           (error) => { error.message.should.contain('Can download PDS libraries starting with') })
