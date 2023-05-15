@@ -187,7 +187,7 @@ describe('ZosFtp Test Suite', () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.FILE`)
         .then(result => result.should.be.a('string'))
     })
-    it.only('should download all members of a pds library', async () => {
+    it('should download all members of a pds library', async () => {
       return ZosFtp.get(`${config.user}.ZOWEUTIL.PDS`, path.resolve(__dirname, 'output', `${config.user}.ZOWEUTIL.PDS`), { mode: 'all' })
     })
     // it('should upload a dir to a pds library', async () => {
